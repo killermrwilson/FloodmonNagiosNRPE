@@ -1,0 +1,105 @@
+i#!/usr/bin/python
+
+import subprocess
+import sys, os
+
+
+#subprocess.check_output(["floodmon"," --stats"])
+
+match = 0;
+count = 0;
+for line in subprocess.check_output(["cat","/etc/floodmon.out"]).split('\n'):
+        count += 1
+        #sys.stdout.write( line #debug
+
+        if 'current SYN_RECV sockets' in line:
+                sys.stdout.write( 'Floodmon: OK Status: 1|')
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Current_SYN_RECV_sockets=%s;50;100;0; ' % tmp)
+        elif 'sockets SYN_RECV reset' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Sockets_SYN_RECV_reset=%sc;;;; ' % tmp)
+        elif 'syncookies sent' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'syncookies_sent=%sc;;;; ' % tmp)
+        elif 'invalid syncookies received' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'invalid_syncookies_received=%sc;;;; ' % tmp)
+        elif 'syncookies received' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'syncookies_received=%sc;;;; ' % tmp)
+        elif 'failed connection attempts' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Failed_Connection_Attempts=%sc;;;; ' % tmp)
+        elif 'received segments' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Received_Segments=%sc;;;; ' % tmp)
+        elif 'sent segments' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Sent_Segments=%sc;;;; ' % tmp)
+        elif 'in/out seg. ratio' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'In_Out_Seg_Ratio=%s;2;3;0; ' % tmp)
+        elif 'null-routed IPs' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Null_Routed_IPs=%sc;;;; ' % tmp)
+        elif 'dropped packets' in line:
+                match = 1
+                line_parse = line.split(':')
+                tmp = line_parse[1]
+                tmp = tmp.replace(" ", "")
+                tmp = tmp.replace(",", "")
+                sys.stdout.write( 'Dropped_Packets=%sc;;;; ' % tmp)
+
+
+
+
+if match == 0:
+        sys.stdout.write( 'CRITICAL: Error in output of floodmon --stats: Reviewed %i lines ' % count)
+
+
+
+
+
+
+
